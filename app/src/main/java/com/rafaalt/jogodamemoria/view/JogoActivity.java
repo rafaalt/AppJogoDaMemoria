@@ -10,10 +10,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rafaalt.jogodamemoria.R;
 import com.rafaalt.jogodamemoria.model.JogoDaMemoria;
@@ -23,6 +26,7 @@ import java.util.Random;
 
 public class JogoActivity extends AppCompatActivity {
     int cartasAbertas = 0;
+    boolean livre = true;
     ImageView ultimaCell;
     JogoDaMemoria jogoDaMemoria;
     @Override
@@ -37,10 +41,14 @@ public class JogoActivity extends AppCompatActivity {
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
                 int tag = jogoDaMemoria.getValorAleatorio(i*tamanho + j);
-                Log.d("AAA", "Tag: " + tag + " | posicao" + (i*tamanho + j));
+                //Log.d("JogoActivity", "Tag: " + tag + " | posicao" + (i*tamanho + j));
                 tabuleiro.addView(createCell(tamanho, tag, i*tamanho + j));
             }
         }
+        Button btnReinciar = (Button) findViewById(R.id.btnReiniciar);
+        btnReinciar.setOnClickListener(view -> {
+            reiniciar(tamanho);
+        });
     }
     public ImageView createCell(int tamanho, int tag, int posicao){
         ImageView cell = new ImageView(this);
@@ -54,34 +62,57 @@ public class JogoActivity extends AppCompatActivity {
         cell.setLayoutParams(params);
         cell.setTag(tag);
         cell.setOnClickListener(view -> {
-            jogar(cell, posicao);
+            jogar(cell, posicao, tamanho);
         });
         return cell;
     }
-    public void jogar(ImageView cell, int posicao){
-        cartasAbertas++;
-        boolean ganhou = jogoDaMemoria.jogar(posicao);
-        if(cartasAbertas == 2){
-            Handler handler = new Handler(Looper.getMainLooper());
-            cell.setImageResource(jogoDaMemoria.getIdImagem((int) cell.getTag()));
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if(ganhou){
-                        ultimaCell.setImageResource(jogoDaMemoria.getIdImagem(9));
-                        cell.setImageResource(jogoDaMemoria.getIdImagem(9));
+    public void jogar(ImageView cell, int posicao, int tamanhoTabuleiro) {
+        if (livre) {
+            cartasAbertas++;
+            boolean ganhou = jogoDaMemoria.jogar(posicao);
+            if (cartasAbertas == 2) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                cell.setImageResource(jogoDaMemoria.getIdImagem((int) cell.getTag()));
+                livre = false;
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (ganhou) {
+                            ultimaCell.setVisibility(View.INVISIBLE);
+                            cell.setVisibility(View.INVISIBLE);
+                        } else {
+                            ultimaCell.setImageResource(jogoDaMemoria.getIdImagem(0));
+                            cell.setImageResource(jogoDaMemoria.getIdImagem(0));
+                        }
+                        cartasAbertas = 0;
+                        livre = true;
+                        if(jogoDaMemoria.verificaVencedor())
+                            reiniciar(tamanhoTabuleiro);
                     }
-                    else{
-                        ultimaCell.setImageResource(jogoDaMemoria.getIdImagem(0));
-                        cell.setImageResource(jogoDaMemoria.getIdImagem(0));
-                    }
-                    cartasAbertas = 0;
-                }
-            }, 1000);
-        }
-        else{
-            cell.setImageResource(jogoDaMemoria.getIdImagem((int) cell.getTag()));
-            ultimaCell = cell;
+
+                }, 1000);
+            } else {
+                cell.setImageResource(jogoDaMemoria.getIdImagem((int) cell.getTag()));
+                ultimaCell = cell;
+            }
         }
     }
+
+    public void reiniciar(int tamanho){
+        Toast.makeText(this, "Parabens! Voce venceu!", Toast.LENGTH_SHORT).show();
+        GridLayout tabuleiro = (GridLayout) findViewById(R.id.gridLayout);
+        jogoDaMemoria = new JogoDaMemoria(tamanho);
+        tabuleiro.setRowCount(tamanho);
+        tabuleiro.setColumnCount(tamanho);
+        for (int i = 0; i < tamanho; i++) {
+            for (int j = 0; j < tamanho; j++) {
+                ImageView cell = (ImageView) tabuleiro.getChildAt(i*tamanho + j);
+                cell.setVisibility(View.VISIBLE);
+                cell.setImageResource(jogoDaMemoria.getIdImagem(0));
+                int tag = jogoDaMemoria.getValorAleatorio(i*tamanho + j);
+                cell.setTag(tag);
+            }
+        }
+    }
+
 }

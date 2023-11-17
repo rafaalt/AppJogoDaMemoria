@@ -1,5 +1,7 @@
 package com.rafaalt.jogodamemoria.model;
 
+import android.util.Log;
+
 import com.rafaalt.jogodamemoria.R;
 
 import java.util.ArrayList;
@@ -10,10 +12,12 @@ public class JogoDaMemoria {
     private int[] grid;
     private ArrayList<Integer> arrayRandom;
     private Random random;
-
+    private int tamanho;
+    private int acertos;
     private int cartasAbertas;
     private int ultimaPosicao;
     public JogoDaMemoria(int tamanho) {
+        this.tamanho = tamanho;
         inicializarImagens(tamanho);
         this.grid = new int[tamanho*tamanho];
         this.random = new Random();
@@ -21,6 +25,7 @@ public class JogoDaMemoria {
         gerarArrayAleatorio(tamanho);
         this.cartasAbertas = 0;
         this.ultimaPosicao = 0;
+        this.acertos = 0;
     }
 
     private void inicializarImagens(int tamanho){
@@ -46,21 +51,41 @@ public class JogoDaMemoria {
         imagens[18] = R.drawable.time18;
     }
     public boolean jogar(int posicao){
+        String tab = "Posicao: " + posicao + "\n";
+        tab += "Ultima Posicao: " + ultimaPosicao + "\n";
+        tab += "Cartas Abertsa: " + cartasAbertas + "\n";
+        for(int i=0;i<4;i++){
+            for(int j=0;j<4;j++){
+                tab += grid[i*4+j];
+                tab += "|";
+            }
+            tab+="\n";
+        }
+        Log.d("TABULEIRO", tab);
         if(this.cartasAbertas == 0){//Vai abrir a primeira carta
-            this.ultimaPosicao = grid[posicao];
+            this.ultimaPosicao = posicao;
             cartasAbertas++;
             return false;
         }
         else if(this.cartasAbertas == 1){
-            if(this.ultimaPosicao == grid[posicao]){//Acertou!
+            if(grid[ultimaPosicao] == grid[posicao]){//Acertou!
                 grid[posicao] = 0;
                 grid[ultimaPosicao] = 0;
                 cartasAbertas = 0;
+                acertos++;
                 return true;
             }
+            cartasAbertas = 0;
             return false;
         }
         return false;
+    }
+
+    public boolean verificaVencedor(){
+        if(this.acertos == tamanho*tamanho/2)
+            return true;
+        else
+            return false;
     }
     public int getUltimaPosicao(){
         return this.ultimaPosicao;
