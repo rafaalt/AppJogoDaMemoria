@@ -3,5 +3,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="textColor">#E35427</color>
+    <color name="textColorBtn">#232322</color>
     <color name="backColor">#FBFB9D</color>
+    <color name="checked">#F87F59</color>
+    <color name="unchecked">#A5A5A5</color>
 </resources>

@@ -2,6 +2,7 @@ package com.rafaalt.jogodamemoria.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -34,8 +35,10 @@ public class JogoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jogo);
         GridLayout tabuleiro = (GridLayout) findViewById(R.id.gridLayout);
-        int tamanho = 4;
+        Intent intent = getIntent();
+        int tamanho = intent.getIntExtra("tamanho", 0);
         jogoDaMemoria = new JogoDaMemoria(tamanho);
+
         tabuleiro.setRowCount(tamanho);
         tabuleiro.setColumnCount(tamanho);
         for (int i = 0; i < tamanho; i++) {
@@ -45,9 +48,13 @@ public class JogoActivity extends AppCompatActivity {
                 tabuleiro.addView(createCell(tamanho, tag, i*tamanho + j));
             }
         }
-        Button btnReinciar = (Button) findViewById(R.id.btnReiniciar);
+        Button btnReinciar = (Button) findViewById(R.id.jogoBtnReiniciar);
+        Button btnVoltar = (Button) findViewById(R.id.jogoBtnVoltar);
         btnReinciar.setOnClickListener(view -> {
             reiniciar(tamanho);
+        });
+        btnVoltar.setOnClickListener(view -> {
+            this.finish();
         });
     }
     public ImageView createCell(int tamanho, int tag, int posicao){
@@ -99,7 +106,7 @@ public class JogoActivity extends AppCompatActivity {
     }
 
     public void reiniciar(int tamanho){
-        Toast.makeText(this, "Parabens! Voce venceu!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Parabens! Voce venceu!", Toast.LENGTH_SHORT).show();
         GridLayout tabuleiro = (GridLayout) findViewById(R.id.gridLayout);
         jogoDaMemoria = new JogoDaMemoria(tamanho);
         tabuleiro.setRowCount(tamanho);
