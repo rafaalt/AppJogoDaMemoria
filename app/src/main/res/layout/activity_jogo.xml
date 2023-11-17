@@ -8,7 +8,7 @@
     android:paddingBottom="50dp"
     android:paddingHorizontal="30dp"
     android:background="@color/backColor"
-    tools:context=".JogoActivity">
+    tools:context=".view.JogoActivity">
 
     <TextView
         android:id="@+id/txtNomeJogador"
