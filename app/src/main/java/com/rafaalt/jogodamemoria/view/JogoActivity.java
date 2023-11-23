@@ -20,8 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rafaalt.jogodamemoria.R;
+import com.rafaalt.jogodamemoria.model.FileManager;
 import com.rafaalt.jogodamemoria.model.JogoDaMemoria;
+import com.rafaalt.jogodamemoria.model.Recorde;
 
+import org.w3c.dom.Text;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -30,6 +35,7 @@ public class JogoActivity extends AppCompatActivity {
     boolean livre = true;
     ImageView ultimaCell;
     JogoDaMemoria jogoDaMemoria;
+    int recorde;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +44,9 @@ public class JogoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         int tamanho = intent.getIntExtra("tamanho", 0);
         jogoDaMemoria = new JogoDaMemoria(tamanho);
-
+        TextView txtRecorde = (TextView) findViewById(R.id.jogoTxtRecorde);
+        setRecorde(tamanho);
+        txtRecorde.setText("Recorde: " + recorde);
         tabuleiro.setRowCount(tamanho);
         tabuleiro.setColumnCount(tamanho);
         for (int i = 0; i < tamanho; i++) {
@@ -80,6 +88,8 @@ public class JogoActivity extends AppCompatActivity {
             if (cartasAbertas == 2) {
                 Handler handler = new Handler(Looper.getMainLooper());
                 cell.setImageResource(jogoDaMemoria.getIdImagem((int) cell.getTag()));
+                TextView txtJogadas = (TextView) findViewById(R.id.jogoTxtJogadas);
+                txtJogadas.setText("Jogadas: " + jogoDaMemoria.getNumJogadas());
                 livre = false;
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -93,8 +103,13 @@ public class JogoActivity extends AppCompatActivity {
                         }
                         cartasAbertas = 0;
                         livre = true;
-                        if(jogoDaMemoria.verificaVencedor())
+                        if(jogoDaMemoria.verificaVencedor()) {
+                            if(recorde == 0 || recorde > jogoDaMemoria.getNumJogadas()){
+                                atualizarRecorde(tamanhoTabuleiro, jogoDaMemoria.getNumJogadas());
+                                recorde = jogoDaMemoria.getNumJogadas();
+                            }
                             reiniciar(tamanhoTabuleiro);
+                        }
                     }
 
                 }, 1000);
@@ -111,6 +126,8 @@ public class JogoActivity extends AppCompatActivity {
         jogoDaMemoria = new JogoDaMemoria(tamanho);
         tabuleiro.setRowCount(tamanho);
         tabuleiro.setColumnCount(tamanho);
+        TextView txtRecorde = (TextView) findViewById(R.id.jogoTxtRecorde);
+        txtRecorde.setText("Recorde: " + recorde);
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
                 ImageView cell = (ImageView) tabuleiro.getChildAt(i*tamanho + j);
@@ -121,5 +138,18 @@ public class JogoActivity extends AppCompatActivity {
             }
         }
     }
-
+    public void setRecorde(int tamanho){
+        int tam = tamanho*tamanho;
+        // Exemplo de como carregar dados do arquivo
+        ArrayList<Recorde> loadedData = FileManager.loadData(this);
+        for (Recorde x : loadedData) {
+            if(x.getTamanho() == tam) {
+                this.recorde = x.getRecordeJogadas();
+                break;
+            }
+        }
+    }
+    public void atualizarRecorde(int tamanho, int newRecorde){
+        FileManager.saveData(this, new Recorde(tamanho*tamanho, newRecorde));
+    }
 }

@@ -16,6 +16,7 @@ public class JogoDaMemoria {
     private int acertos;
     private int cartasAbertas;
     private int ultimaPosicao;
+    private int numJogadas;
     public JogoDaMemoria(int tamanho) {
         this.tamanho = tamanho;
         inicializarImagens(tamanho);
@@ -26,6 +27,7 @@ public class JogoDaMemoria {
         this.cartasAbertas = 0;
         this.ultimaPosicao = 0;
         this.acertos = 0;
+        this.numJogadas = 0;
     }
 
     private void inicializarImagens(int tamanho){
@@ -73,9 +75,11 @@ public class JogoDaMemoria {
                 grid[ultimaPosicao] = 0;
                 cartasAbertas = 0;
                 acertos++;
+                numJogadas++;
                 return true;
             }
             cartasAbertas = 0;
+            numJogadas++;
             return false;
         }
         return false;
@@ -106,5 +110,9 @@ public class JogoDaMemoria {
 
     public int getIdImagem(int tag){
         return this.imagens[tag];
+    }
+
+    public int getNumJogadas(){
+        return this.numJogadas;
     }
 }
