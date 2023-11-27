@@ -38,4 +38,17 @@ public class MainActivity extends AppCompatActivity {
             //Toast.makeText(this, "6", Toast.LENGTH_SHORT).show();
         }
     }
+    /*
+    public void onClickedTema(View view){
+        RadioButton btnBrasil = (RadioButton) findViewById(R.id.radioBtnFutebolBr);
+        RadioButton btnGringo = (RadioButton) findViewById(R.id.radioBtnFutebolGringo);
+        if(btnBrasil.isChecked()) {
+            this.tamanhoTabuleiro = 4;
+            //Toast.makeText(this, "4", Toast.LENGTH_SHORT).show();
+        }
+        else if(btnGringo.isChecked()){
+            this.tamanhoTabuleiro = 6;
+            //Toast.makeText(this, "6", Toast.LENGTH_SHORT).show();
+        }
+    }*/
 }

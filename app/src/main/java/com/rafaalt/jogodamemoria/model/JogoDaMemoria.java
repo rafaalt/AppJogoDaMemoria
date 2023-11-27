@@ -16,6 +16,7 @@ public class JogoDaMemoria {
     private int acertos;
     private int cartasAbertas;
     private int ultimaPosicao;
+
     private int numJogadas;
     public JogoDaMemoria(int tamanho) {
         this.tamanho = tamanho;
@@ -80,6 +81,7 @@ public class JogoDaMemoria {
             }
             cartasAbertas = 0;
             numJogadas++;
+            this.ultimaPosicao = -1;
             return false;
         }
         return false;

@@ -83,39 +83,41 @@ public class JogoActivity extends AppCompatActivity {
     }
     public void jogar(ImageView cell, int posicao, int tamanhoTabuleiro) {
         if (livre) {
-            cartasAbertas++;
-            boolean ganhou = jogoDaMemoria.jogar(posicao);
-            if (cartasAbertas == 2) {
-                Handler handler = new Handler(Looper.getMainLooper());
-                cell.setImageResource(jogoDaMemoria.getIdImagem((int) cell.getTag()));
-                TextView txtJogadas = (TextView) findViewById(R.id.jogoTxtJogadas);
-                txtJogadas.setText("Jogadas: " + jogoDaMemoria.getNumJogadas());
-                livre = false;
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (ganhou) {
-                            ultimaCell.setVisibility(View.INVISIBLE);
-                            cell.setVisibility(View.INVISIBLE);
-                        } else {
-                            ultimaCell.setImageResource(jogoDaMemoria.getIdImagem(0));
-                            cell.setImageResource(jogoDaMemoria.getIdImagem(0));
-                        }
-                        cartasAbertas = 0;
-                        livre = true;
-                        if(jogoDaMemoria.verificaVencedor()) {
-                            if(recorde == 0 || recorde > jogoDaMemoria.getNumJogadas()){
-                                atualizarRecorde(tamanhoTabuleiro, jogoDaMemoria.getNumJogadas());
-                                recorde = jogoDaMemoria.getNumJogadas();
+            if(posicao != jogoDaMemoria.getUltimaPosicao()){
+                cartasAbertas++;
+                boolean ganhou = jogoDaMemoria.jogar(posicao);
+                if (cartasAbertas == 2) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    cell.setImageResource(jogoDaMemoria.getIdImagem((int) cell.getTag()));
+                    TextView txtJogadas = (TextView) findViewById(R.id.jogoTxtJogadas);
+                    txtJogadas.setText("Jogadas: " + jogoDaMemoria.getNumJogadas());
+                    livre = false;
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (ganhou) {
+                                ultimaCell.setVisibility(View.INVISIBLE);
+                                cell.setVisibility(View.INVISIBLE);
+                            } else {
+                                ultimaCell.setImageResource(jogoDaMemoria.getIdImagem(0));
+                                cell.setImageResource(jogoDaMemoria.getIdImagem(0));
                             }
-                            reiniciar(tamanhoTabuleiro);
+                            cartasAbertas = 0;
+                            livre = true;
+                            if(jogoDaMemoria.verificaVencedor()) {
+                                if(recorde == 0 || recorde > jogoDaMemoria.getNumJogadas()){
+                                    atualizarRecorde(tamanhoTabuleiro, jogoDaMemoria.getNumJogadas());
+                                    recorde = jogoDaMemoria.getNumJogadas();
+                                }
+                                reiniciar(tamanhoTabuleiro);
+                            }
                         }
-                    }
 
-                }, 1000);
-            } else {
-                cell.setImageResource(jogoDaMemoria.getIdImagem((int) cell.getTag()));
-                ultimaCell = cell;
+                    }, 1000);
+                } else {
+                    cell.setImageResource(jogoDaMemoria.getIdImagem((int) cell.getTag()));
+                    ultimaCell = cell;
+                }
             }
         }
     }
@@ -128,6 +130,8 @@ public class JogoActivity extends AppCompatActivity {
         tabuleiro.setColumnCount(tamanho);
         TextView txtRecorde = (TextView) findViewById(R.id.jogoTxtRecorde);
         txtRecorde.setText("Recorde: " + recorde);
+        TextView txtJogadas = (TextView) findViewById(R.id.jogoTxtJogadas);
+        txtJogadas.setText("Jogadas: " + jogoDaMemoria.getNumJogadas());
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
                 ImageView cell = (ImageView) tabuleiro.getChildAt(i*tamanho + j);

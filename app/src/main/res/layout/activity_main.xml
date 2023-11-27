@@ -64,6 +64,38 @@
             android:textAlignment="center"
             android:onClick="onClickedTamanho"/>
     </RadioGroup>
+    <!--
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/radioBtnFutebolBr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Brasil"
+            android:paddingHorizontal="10dp"
+            android:checked="true"
+            android:background="@drawable/radio_button_selector"
+            android:textAlignment="center"
+            android:textColor="@color/textColorBtn"
+            android:button="@android:color/transparent"
+            android:onClick="onClickedTema"/>
+        <RadioButton
+            android:id="@+id/radioBtnFutebolGringo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gringo"
+            android:paddingHorizontal="10dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/radio_button_selector"
+            android:button="@android:color/transparent"
+            android:textColor="@color/textColorBtn"
+            android:textAlignment="center"
+            android:onClick="onClickedTema"/>
+    </RadioGroup>-->
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
