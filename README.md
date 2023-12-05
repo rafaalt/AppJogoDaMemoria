@@ -21,8 +21,8 @@ Aplicativo para Android feito utilizando a linguagem Java.
 
 ### Imagens do projeto
 
-![Execução 4x4](assets/prints/jogo1.png)
-![Execução 6x6](assets/prints/jogo2.png)
+![Execução 4x4](assets/jogo1.png)
+![Execução 6x6](assets/jogo2.png)
 
 ### Como Baixar
 
